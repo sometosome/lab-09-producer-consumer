@@ -39,6 +39,7 @@ int main(int argc, char** argv)
 
   fulling_vector(arguments.url, links, arguments.depth);
   item_filling(itemList, links);
+
   for (size_t i = 0; i < links.size(); i++)
   {
     std::cout << itemList[i].host << " " << itemList[i].target << std::endl;
