@@ -36,10 +36,19 @@ struct Item {
   std::string target;
 };
 
-std::string getpage(int argc, char** argv);
-void findLinks(std::string const& sBody, std::vector<std::string>& vLinks);
+struct Arguments{
+  std::string url;
+  size_t depth;
+  size_t network_threads;
+  size_t parser_threads;
+  std::string output;
+};
+
+std::string get_page(std::string url, std::string target);
+void find_links(std::string& sBody, std::vector<std::string>& vLinks);
 void item_filling(std::vector<Item>& itemList, std::vector<std::string>& vLinks);
-std::string getHost(std::string &url);
-std::string getTarget(std::string &url);
+std::string get_host(std::string &url);
+std::string get_target(std::string &url);
+void fulling_vector(std::string url, std::vector<std::string>& vLinks, size_t depth);
 
 #endif // INCLUDE_PARSER_HPP_

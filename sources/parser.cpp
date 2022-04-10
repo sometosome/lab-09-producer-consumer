@@ -3,11 +3,10 @@
 #include <stdexcept>
 #include <parser.hpp>
 
-std::string getpage(int argc, char** argv) {
-  auto const host = argv[1];
-  auto const port = argv[2];
-  auto const target = argv[3];
-  int version = argc == 5 && !std::strcmp("1.0", argv[4]) ? 10 : 11;
+std::string get_page(std::string url, std::string target) {
+  char const * host = url.c_str();
+  auto const port = "443";
+  int version = 11;
 
   boost::asio::io_context ioc;
   ssl::context ctx{ ssl::context::sslv23_client };
@@ -37,31 +36,35 @@ std::string getpage(int argc, char** argv) {
   return boost::beast::buffers_to_string(res.body().data());
 }
 
-std::string getHost(std::string &url) {
+std::string get_host(std::string &url) {
   std::string host;
-  int64_t skipHTTP = 0;
   int64_t skipHTTPS = 0;
+  int64_t skipHTTP = 0;
   int64_t pos = 0;
   skipHTTPS = url.find("https");
   skipHTTP = url.find("http");
-  if (skipHTTPS != -1)pos += skipHTTPS + 3 + 5;
-  else if (skipHTTP != -1)pos += skipHTTP + 3 + 4;
+  if (skipHTTPS != -1)
+    pos += skipHTTPS + 3 + 5;
+  else if (skipHTTP != -1)
+    pos += skipHTTP + 3 + 4;
   int64_t endOfHost = url.find('/', pos);
-  if (endOfHost == -1)endOfHost = url.size();
+  if (endOfHost == -1)
+    endOfHost = url.size();
   for (int64_t i = pos; i < endOfHost; ++i)
     host.push_back(url[i]);
   return host;
 }
 
-std::string getTarget(std::string &url) {
+std::string get_target(std::string &url) {
   std::string target;
   int64_t www = url.find("www");
   int64_t skipWWW = 0;
-  if (www != -1) skipWWW = www + 2;
+  if (www != -1)
+    skipWWW = www + 2;
   int64_t endOfHost = url.find('.', skipWWW);
   int64_t targetStartPos = url.find('/', endOfHost);
   for (uint64_t i = targetStartPos; i < url.size(); ++i) {
-    target.push_back(url[i]);//по буквам заносим в target
+    target.push_back(url[i]);
   }
   if (target[target.size() - 1] != '/') target.push_back('/');
   return target;
@@ -70,15 +73,15 @@ std::string getTarget(std::string &url) {
 void item_filling(std::vector<Item>& itemList, std::vector<std::string>& vLinks)
 {
   Item temp = { "", "" };
-  for(size_t i = 0; i < vLinks.size(); i++)
+  for (size_t i = 0; i < vLinks.size(); i++)
   {
-    temp.host = getHost(vLinks[i]);
-    temp.target = getTarget(vLinks[i]);
+    temp.host = get_host(vLinks[i]);
+    temp.target = get_target(vLinks[i]);
     itemList.push_back(temp);
   }
 }
 
-void findLinks(std::string const& sBody, std::vector<std::string>& vLinks)
+void find_links(std::string& sBody, std::vector<std::string>& vLinks)
 {
   std::regex rUri{ "^(?:(https?)://)?([^/]+)(/.*)?" };
   GumboOutput* output = gumbo_parse(sBody.c_str());
@@ -106,11 +109,32 @@ void findLinks(std::string const& sBody, std::vector<std::string>& vLinks)
         qn.push(static_cast<GumboNode*>(children->data[i]));
       }
     }
+
+    for (auto iter = vLinks.begin(); iter < vLinks.end(); iter++)
+    {
+      if (iter->substr(0,6) != "https:")
+      {
+        vLinks.erase(iter);
+      }
+    }
   }
 
   gumbo_destroy_output(&kGumboDefaultOptions, output);
 }
 
-//void fulling_vector(std::string& res) {
-//
-//}
+void fulling_vector(std::string url, std::vector<std::string>& vLinks, size_t depth) {
+  size_t iter = 0;
+  size_t vLinksSize = 0;
+  std::string page = get_page(get_host(url), get_target(url));
+  find_links(page, vLinks);
+  for (size_t i = 1; i < depth; i++)
+  {
+    vLinksSize = vLinks.size();
+    for (size_t j = 0; j < vLinksSize; j++)
+    {
+      page = get_page(get_host(vLinks[iter + j]), get_target(vLinks[iter + j]));
+      find_links(page, vLinks);
+    }
+    iter += (vLinksSize - iter);
+  }
+}

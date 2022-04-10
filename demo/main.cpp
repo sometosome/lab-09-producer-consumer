@@ -1,16 +1,10 @@
 #include <parser.hpp>
 
-struct Arguments{
-  std::string url;
-  size_t depth;
-  size_t network_threads;
-  size_t parser_threads;
-  std::string output;
-};
-
 int main(int argc, char** argv)
 {
   Arguments arguments = {"", 1, 1, 1, "./output.txt"};
+  std::vector<std::string> links;
+  std::vector<Item> itemList;
 
   boost::program_options::options_description desc("Parcer");
   desc.add_options()
@@ -42,12 +36,8 @@ int main(int argc, char** argv)
   if (vm.count("output")){
     arguments.output = vm["output"].as<std::string>();
   }
-  //  std::cout << arguments.url << " " << arguments.output << " " << arguments.depth << std::endl;
-  std::string res = getpage(argc, argv);
-  std::vector<std::string> links;
 
-  std::vector<Item> itemList;
-  findLinks(res, links);
+  fulling_vector(arguments.url, links, arguments.depth);
   item_filling(itemList, links);
   for (size_t i = 0; i < links.size(); i++)
   {
