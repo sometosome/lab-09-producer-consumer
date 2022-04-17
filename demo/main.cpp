@@ -2,7 +2,7 @@
 
 int main(int argc, char** argv)
 {
-  Arguments arguments = {"", 1, 1, 1, "./output.txt"};
+  Arguments arguments = {"www.ozon.ru", 1, 1, 1, "./output.txt"};
   std::vector<std::string> links;
   std::vector<Item> itemList;
 
@@ -35,6 +35,15 @@ int main(int argc, char** argv)
   }
   if (vm.count("output")){
     arguments.output = vm["output"].as<std::string>();
+  }
+  std::string first_page = get_page(arguments.url, "/");
+  find_links(first_page, links);
+  std::vector<std::vector<std::string>> vector;
+  for (size_t i = 0; i < 2; i++)
+  {
+    std::vector<std::string> temp;
+    vector.push_back(temp);
+
   }
 
   fulling_vector(links, arguments.depth, 2);

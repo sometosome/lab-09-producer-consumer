@@ -51,6 +51,6 @@ void item_filling(std::vector<Item>& itemList, std::vector<std::string>& vLinks)
 std::string get_host(std::string &url);
 std::string get_target(std::string &url);
 void fulling_vector(std::vector<std::string>& vLinks, size_t depth, size_t threadsNum);
-void thread_start(std::string url, std::vector<std::string>& vLinks, size_t depth, size_t threadsNum);
+//void thread_start(std::string url, std::vector<std::string>& vLinks, size_t depth, size_t threadsNum);
 
 #endif // INCLUDE_PARSER_HPP_
