@@ -37,7 +37,7 @@ int main(int argc, char** argv)
     arguments.output = vm["output"].as<std::string>();
   }
 
-  fulling_vector(arguments.url, links, arguments.depth);
+  fulling_vector(links, arguments.depth, 2);
   item_filling(itemList, links);
 
   for (size_t i = 0; i < links.size(); i++)

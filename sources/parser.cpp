@@ -122,22 +122,22 @@ void find_links(std::string& sBody, std::vector<std::string>& vLinks)
   gumbo_destroy_output(&kGumboDefaultOptions, output);
 }
 
-//void fulling_vector(std::vector<std::string>& vLinks, size_t depth, size_t threadsNum) {
-//  size_t iter = 0;
-//  size_t vLinksSize = 0;
-//  std::string page = "";
-//  for (size_t i = 1; i < depth; i++)
-//  {
-//    vLinksSize = vLinks.size();
-//    for (size_t j = 0; j + threadsNum < vLinksSize; j++)
-//    {
-//      page = get_page(get_host(vLinks[iter + j + threadsNum]), get_target(vLinks[iter + j + threadsNum]));
-//      find_links(page, vLinks);
-//    }
-//    iter += (vLinksSize - iter);
-//  }
-//}
-//
+void fulling_vector(std::vector<std::string>& vLinks, size_t depth, size_t threadsNum) {
+  size_t iter = 0;
+  size_t vLinksSize = 0;
+  std::string page = "";
+  for (size_t i = 1; i < depth; i++)
+  {
+    vLinksSize = vLinks.size();
+    for (size_t j = 0; j + threadsNum < vLinksSize; j++)
+    {
+      page = get_page(get_host(vLinks[iter + j + threadsNum]), get_target(vLinks[iter + j + threadsNum]));
+      find_links(page, vLinks);
+    }
+    iter += (vLinksSize - iter);
+  }
+}
+
 //void thread_start(std::string url, std::vector<std::string>& vLinks, size_t depth, size_t threadsNum) {
 //  std::string page = get_page(get_host(url), get_target(url));
 //  find_links(page, vLinks);
@@ -148,4 +148,4 @@ void find_links(std::string& sBody, std::vector<std::string>& vLinks)
 //    std::thread t(fulling_vector, vLinks, depth, threadsNum);
 //    thread.join();
 //  }
-}
+//}
