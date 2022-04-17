@@ -122,14 +122,12 @@ void find_links(std::string& sBody, std::vector<std::string>& vLinks)
   gumbo_destroy_output(&kGumboDefaultOptions, output);
 }
 
-void fulling_vector(std::vector<std::string>& vLinks, size_t depth, size_t threadsNum) {
+void fulling_vector(std::vector<std::string>& vLinks, size_t depth) {
   size_t iter = 0;
-  std::cout << threadsNum << std::endl;
-  size_t vLinksSize = 0;
   std::string page = "";
   for (size_t i = 1; i < depth; i++)
   {
-    vLinksSize = vLinks.size();
+    size_t vLinksSize = vLinks.size();
     for (size_t j = 0; j < vLinksSize; j++)
     {
       page = get_page(get_host(vLinks[iter + j]), get_target(vLinks[iter + j]));
