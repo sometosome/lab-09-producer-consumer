@@ -38,15 +38,33 @@ int main(int argc, char** argv)
   }
   std::string first_page = get_page(arguments.url, "/");
   find_links(first_page, links);
+
+
+  //**
   std::vector<std::vector<std::string>> vector;
+  std::vector<std::thread> threads;
+  size_t step = links.size()/2;
   for (size_t i = 0; i < 2; i++)
   {
     std::vector<std::string> temp;
+    for (size_t j = i * step; j < step * (i + 1); j++){
+      temp.push_back(links[j]);
+    }
     vector.push_back(temp);
+    threads.emplace_back(fulling_vector,std::ref(temp), std::ref(arguments.depth));
+  }
+  for (int i = 0; i < 2; i++) {
+    try {
+      threads[i].join();
+    } catch (int num) {
+      continue;
+    }
 
   }
+  //**
 
-  fulling_vector(links, arguments.depth, 2);
+
+  //fulling_vector(links, arguments.depth);
   item_filling(itemList, links);
 
   for (size_t i = 0; i < links.size(); i++)
