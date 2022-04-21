@@ -34,7 +34,7 @@ int main(int argc, char** argv) {
     arguments.depth = vm["depth"].as<size_t>();
   }
   if (vm.count("network_threads")) {
-    arguments.network_threads = vm["url"].as<size_t>();
+    arguments.network_threads = vm["network_threads"].as<size_t>();
   }
   if (vm.count("parser_threads")) {
     arguments.parser_threads = vm["parser_threads"].as<size_t>();
