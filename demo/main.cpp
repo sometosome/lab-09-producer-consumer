@@ -4,6 +4,8 @@ int main(int argc, char** argv) {
   Arguments arguments = {"www.ozon.ru", 1, 1, 1, "./output.txt"};
   std::vector<std::string> links;
   std::vector<Item> itemList;
+  std::vector<std::vector<std::string>> vectorHTML;
+  std::vector<std::string> vectorIMG;
 
   boost::program_options::options_description desc("Parcer");
   desc.add_options()("help", "produce help message")(
@@ -43,12 +45,18 @@ int main(int argc, char** argv) {
   std::string first_page = get_page(arguments.url, "/");
   find_links(first_page, links);
 
-  std::vector<std::vector<std::string>> vector;
-  thread_start(vector, links, arguments.depth);
+  thread_start_parser(vectorHTML, links, arguments.depth, arguments.network_threads);
+  links.clear();
+  for (size_t i = 0; i < vectorHTML.size(); i++) {
+    for (size_t j = 0; j < vectorHTML[i].size(); j++)
+      links.push_back(vectorHTML[i][j]);
+  }
+  thread_start_img(vectorIMG, links, arguments.depth, arguments.parser_threads);
+//  item_filling(itemList, links);
 
-  item_filling(itemList, links);
-
-  for (size_t i = 0; i < links.size(); i++) {
-    std::cout << itemList[i].host << " " << itemList[i].target << std::endl;
+  for (size_t i = 0; i < vectorIMG.size(); i++) {
+    //std::cout << itemList[i].host << " " << itemList[i].target << std::endl;
+//    for (size_t j = 0; j < vectorIMG[i].size(); j++)
+      std::cout << vectorIMG[i] << std::endl;
   }
 }
