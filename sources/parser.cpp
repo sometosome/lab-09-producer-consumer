@@ -127,11 +127,11 @@ void find_images(std::string& sBody, std::vector<std::string>& vLinksImg) {
     qn.pop();
 
     if (GUMBO_NODE_ELEMENT == node->type) {
-      GumboAttribute* href = nullptr;
+      GumboAttribute* src = nullptr;
       if ((node->v.element.tag == GUMBO_TAG_A &&
-           (href = gumbo_get_attribute(&node->v.element.attributes, "href"))) &&
-          (std::regex_match(href->value, rUri))) {
-        vLinksImg.push_back(href->value);
+           (src = gumbo_get_attribute(&node->v.element.attributes, "src"))) &&
+          (std::regex_match(src->value, rUri))) {
+        vLinksImg.push_back(src->value);
       }
 
       GumboVector* children = &node->v.element.children;
