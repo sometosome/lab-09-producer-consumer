@@ -45,18 +45,19 @@ int main(int argc, char** argv) {
   std::string first_page = get_page(arguments.url, "/");
   find_links(first_page, links);
 
-  thread_start_parser(vectorHTML, links, arguments.depth, arguments.network_threads);
+  thread_start_parser(vectorHTML, links, arguments.depth,
+                      arguments.network_threads);
   links.clear();
   for (size_t i = 0; i < vectorHTML.size(); i++) {
     for (size_t j = 0; j < vectorHTML[i].size(); j++)
       links.push_back(vectorHTML[i][j]);
   }
   thread_start_img(vectorIMG, links, arguments.depth, arguments.parser_threads);
-//  item_filling(itemList, links);
 
+  std::ofstream stream;
+  stream.open("../log.txt");
   for (size_t i = 0; i < vectorIMG.size(); i++) {
-    //std::cout << itemList[i].host << " " << itemList[i].target << std::endl;
-//    for (size_t j = 0; j < vectorIMG[i].size(); j++)
-      std::cout << vectorIMG[i] << std::endl;
+    stream << vectorIMG[i] << std::endl;
   }
+  stream.close();
 }

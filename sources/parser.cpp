@@ -114,9 +114,7 @@ void find_links(std::string& sBody, std::vector<std::string>& vLinks) {
 
 void find_images(std::string& sBody, std::vector<std::string>& vLinksImg) {
   std::regex rUri{
-      "^(?:(https?)://)?([^/]+)(/.*)?^(?:http(s)?:\\/\\/"
-      ")?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:/"
-      "?#[\\]@!\\$&'\\(\\)\\*\\+,;=.]+(?:png|jpg|jpeg|gif|svg)+$"};
+      "(https:)([/|.|\\w|\\s|-])*\\.(?:jpg|gif|png|svg)"};
   GumboOutput* output = gumbo_parse(sBody.c_str());
 
   std::queue<GumboNode*> qn;
@@ -129,7 +127,7 @@ void find_images(std::string& sBody, std::vector<std::string>& vLinksImg) {
     if (GUMBO_NODE_ELEMENT == node->type) {
       GumboAttribute* src = nullptr;
       if ((node->v.element.tag == GUMBO_TAG_A &&
-           (src = gumbo_get_attribute(&node->v.element.attributes, "src"))) &&
+           (src = gumbo_get_attribute(&node->v.element.attributes, "href"))) &&
           (std::regex_match(src->value, rUri))) {
         vLinksImg.push_back(src->value);
       }
