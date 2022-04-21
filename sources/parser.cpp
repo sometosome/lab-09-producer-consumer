@@ -134,18 +134,21 @@ void fulling_vector(std::vector<std::string>& vLinks, size_t depth) {
       find_links(page, vLinks);
     }
     !iter ? iter += vLinksSize - iter : iter += vLinksSize - (vLinksSize - iter);
-//    iter += (vLinksSize - (vLinksSize - iter));
   }
 }
 
-//void thread_start(std::string url, std::vector<std::string>& vLinks, size_t depth, size_t threadsNum) {
-//  std::string page = get_page(get_host(url), get_target(url));
-//  find_links(page, vLinks);
-//  if ((threadsNum == 0) || (threadsNum > std::thread::hardware_concurrency()))
-//    threadsNum = std::thread::hardware_concurrency();
-//  for (size_t i = 0; i < threadsNum; i++)
-//  {
-//    std::thread t(fulling_vector, vLinks, depth, threadsNum);
-//    thread.join();
-//  }
-//}
+void thread_start(std::vector<std::vector<std::string>>& vector, std::vector<std::string>& links, size_t depth) {
+  size_t step = links.size() / depth;
+  for (size_t i = 0; i < depth; i++) {
+    std::vector<std::string> temp;
+
+    for (size_t j = i * step; j < step * (i + 1); j++) {
+      temp.push_back(links[j]);
+    }
+
+    vector.push_back(temp);
+    std::thread thread(fulling_vector, std::ref(temp),
+                       std::ref(depth));
+    thread.join();
+  }
+}
