@@ -126,8 +126,8 @@ void find_images(std::string& sBody, std::vector<std::string>& vLinksImg) {
 
     if (GUMBO_NODE_ELEMENT == node->type) {
       GumboAttribute* src = nullptr;
-      if ((node->v.element.tag == GUMBO_TAG_A &&
-           (src = gumbo_get_attribute(&node->v.element.attributes, "href"))) &&
+      if (((node->v.element.tag == GUMBO_TAG_IMG) || (node->v.element.tag == GUMBO_TAG_IMAGE)) &&
+           (src = gumbo_get_attribute(&node->v.element.attributes, "src")) &&
           (std::regex_match(src->value, rUri))) {
         vLinksImg.push_back(src->value);
       }

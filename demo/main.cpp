@@ -55,7 +55,10 @@ int main(int argc, char** argv) {
   thread_start_img(vectorIMG, links, arguments.depth, arguments.parser_threads);
 
   std::ofstream stream;
-  stream.open("../log.txt");
+  std::stringstream streamTemp;
+
+  streamTemp << arguments.output << "info.txt";
+  stream.open(streamTemp.str());
   for (size_t i = 0; i < vectorIMG.size(); i++) {
     stream << vectorIMG[i] << std::endl;
   }
