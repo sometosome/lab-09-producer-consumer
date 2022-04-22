@@ -19,7 +19,8 @@ std::string get_page(std::string url, std::string target) {
     throw boost::system::system_error{ec};
   }
   auto const results = resolver.resolve(host, port);
-  boost::asio::connect(stream.next_layer(), results.begin(), results.end());
+  boost::asio::connect(stream.next_layer(),
+                       results.begin(), results.end());
   stream.handshake(ssl::stream_base::client);
   http::request<http::string_body> req{http::verb::get, target, version};
   req.set(http::field::host, host);
@@ -91,7 +92,8 @@ void find_links(std::string& sBody, std::vector<std::string>& vLinks) {
     if (GUMBO_NODE_ELEMENT == node->type) {
       GumboAttribute* href = nullptr;
       if ((node->v.element.tag == GUMBO_TAG_A &&
-           (href = gumbo_get_attribute(&node->v.element.attributes, "href"))) &&
+           (href = gumbo_get_attribute(
+                &node->v.element.attributes, "href"))) &&
           (std::regex_match(href->value, rUri))) {
         vLinks.push_back(href->value);
       }
@@ -126,8 +128,10 @@ void find_images(std::string& sBody, std::vector<std::string>& vLinksImg) {
 
     if (GUMBO_NODE_ELEMENT == node->type) {
       GumboAttribute* src = nullptr;
-      if (((node->v.element.tag == GUMBO_TAG_IMG) || (node->v.element.tag == GUMBO_TAG_IMAGE)) &&
-           (src = gumbo_get_attribute(&node->v.element.attributes, "src")) &&
+      if (((node->v.element.tag == GUMBO_TAG_IMG) ||
+           (node->v.element.tag == GUMBO_TAG_IMAGE)) &&
+           (src = gumbo_get_attribute(
+               &node->v.element.attributes, "src")) &&
           (std::regex_match(src->value, rUri))) {
         vLinksImg.push_back(src->value);
       }
@@ -138,7 +142,8 @@ void find_images(std::string& sBody, std::vector<std::string>& vLinksImg) {
       }
     }
 
-    for (auto iter = vLinksImg.begin(); iter < vLinksImg.end(); iter++) {
+    for (auto iter = vLinksImg.begin();
+         iter < vLinksImg.end(); iter++) {
       if (iter->substr(0, 6) != "https:") {
         vLinksImg.erase(iter);
       }
@@ -156,10 +161,12 @@ void fulling_vector_html(std::vector<std::string>& vLinks, size_t depth) {
     size_t vLinksSize = vLinks.size();
     for (size_t j = 0; j < vLinksSize; j++)
     {
-      page = get_page(get_host(vLinks[iter + j]), get_target(vLinks[iter + j]));
+      page = get_page(get_host(vLinks[iter + j]),
+                      get_target(vLinks[iter + j]));
       find_links(page, vLinks);
     }
-    !iter ? iter += vLinksSize - iter : iter += vLinksSize - (vLinksSize - iter);
+    !iter ? iter += vLinksSize - iter : iter +=
+                                        vLinksSize - (vLinksSize - iter);
   }
 }
 
@@ -170,7 +177,8 @@ void fulling_vector_img(std::vector<std::string>& vLinks,
   for (size_t i = 1; i < depth; i++) {
     size_t vLinksSize = vLinks.size();
     for (size_t j = 0; j < vLinksSize; j++) {
-      page = get_page(get_host(vLinks[iter + j]), get_target(vLinks[iter + j]));
+      page = get_page(get_host(vLinks[iter + j]),
+                      get_target(vLinks[iter + j]));
       find_images(page, vLinksImg);
     }
     !iter ? iter += vLinksSize - iter
@@ -188,7 +196,8 @@ void thread_start_parser(std::vector<std::vector<std::string>>& vector,
       temp.push_back(links[j]);
     }
     vector.push_back(temp);
-    std::thread thread(fulling_vector_html, std::ref(temp), std::ref(depth));
+    std::thread thread(fulling_vector_html, std::ref(temp),
+                       std::ref(depth));
     thread.join();
   }
 }
@@ -202,7 +211,8 @@ void thread_start_img(std::vector<std::string>& vector,
     for (size_t j = i * step; j < step * (i + 1); j++) {
       temp.push_back(links[j]);
     }
-    std::thread thread(fulling_vector_img, std::ref(temp), std::ref(vector),
+    std::thread thread(fulling_vector_img, std::ref(temp),
+                       std::ref(vector),
                        std::ref(depth));
     thread.join();
   }

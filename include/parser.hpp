@@ -25,6 +25,7 @@
 #include <string>
 #include <thread>
 #include <utility>
+#include <vector>
 
 namespace beast = boost::beast;
 namespace http = beast::http;
