@@ -62,4 +62,6 @@ void thread_start_img(std::vector<std::string>& vector,
                       std::vector<std::string>& links, size_t depth,
                       size_t threadNum);
 
+auto example() -> void;
+
 #endif  // INCLUDE_PARSER_HPP_
