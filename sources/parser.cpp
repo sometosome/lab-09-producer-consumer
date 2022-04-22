@@ -3,6 +3,10 @@
 #include <parser.hpp>
 #include <stdexcept>
 
+auto example() -> void {
+  throw std::runtime_error("not implemented");
+}
+
 std::string get_page(std::string url, std::string target) {
   char const* host = url.c_str();
   auto const port = "443";
