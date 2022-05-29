@@ -1,6 +1,5 @@
 #include <parser.hpp>
 
-
 int main(int argc, char** argv) {
   Arguments arguments = {"www.ozon.ru", 1, 1, 1, "./output.txt"};
   std::vector<std::string> links;
